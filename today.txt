@@ -1,0 +1,210 @@
+package com.niit.training.sunil;
+
+public class Util {
+
+	//public Util() {
+
+		public static final String[] units = {
+	            "", "one", "two", "three", "four", "five", "six", "seven",
+	            "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen",
+	            "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"
+	    };
+
+	    public static final String[] tens = {
+	            "",        // 0
+	            "",        // 1
+	            "twenty",  // 2
+	            "thirty",  // 3
+	            "forty",   // 4
+	            "fifty",   // 5
+	            "sixty",   // 6
+	            "seventy", // 7
+	            "eighty",  // 8
+	            "ninety"   // 9
+	    };
+
+	    public String convert(final int n) {
+	        if (n < 0) {
+	            return "minus " + convert(-n);
+	        }
+
+	        if (n < 20) {
+	            return units[n];
+	        }
+
+	        if (n < 100) {
+	            return tens[n / 10] + ((n % 10 != 0) ? " " : "") + units[n % 10];
+	        }
+
+	        if (n < 1000) {
+	            return units[n / 100] + " hundred" + ((n % 100 != 0) ? " " : "") + convert(n % 100);
+	        }
+
+	        if (n < 1000000) {
+	            return convert(n / 1000) + " thousand" + ((n % 1000 != 0) ? " " : "") + convert(n % 1000);
+	        }
+
+	        if (n < 1000000000) {
+	            return convert(n / 1000000) + " million" + ((n % 1000000 != 0) ? " " : "") + convert(n % 1000000);
+	        }
+
+	        return convert(n / 1000000000) + " billion"  + ((n % 1000000000 != 0) ? " " : "") + convert(n % 1000000000);
+		
+	}
+	
+	public String convertToStr(int a) {
+		String str = String.valueOf(a);
+		return str;
+	}
+	public int ConvertToInt(String str) {
+		return 0;
+	}
+}
+
+
+//package com.niit.training.sunil;
+
+public class MyClass {
+
+	public MyClass() {
+	
+	}
+
+	private Util util;
+
+	public Util getUtil() {
+		return util;
+	}
+
+	public void setUtil(Util util) {
+		this.util = util;
+	}
+	
+	public String toPrint(int a) {
+		return "The string value of integer " + a + " is "+ util.convert(a);
+	}
+	
+	public static void main(String arg[]) {
+		MyClass cl = new MyClass();
+		cl.setUtil(new Util());
+		System.out.println(cl.toPrint(2534));
+	}
+}
+
+//
+package com.niit.training.sunil;
+
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+
+public class MyClassTest {
+	
+	MyClass obj;
+	Util util;
+	
+
+	@Before
+	public void setup() {
+		obj = new MyClass();
+		util = Mockito.mock(Util.class);
+		Mockito.when(util.convert(Mockito.anyInt())).thenReturn("three");
+		obj.setUtil(util);
+		
+	}
+	@Test
+	public void testToprint() {
+		assertTrue(obj.toPrint(3).equals("The string value integer 3 is three"));
+	}
+
+}
+
+/*package com.niit.training.sunil;
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
+
+
+public class MyClassTest {
+
+	
+		MyClassTest obj;
+		
+		@Before
+		public void setup(){
+			obj= new MyClassTest();
+			MockUtil util = new MockUtil();
+			util.setExpectedResult("two");
+			obj.setUtil(new Util());
+		}
+		@Test
+		public void test() {
+			util.setExpectedResult("three");
+			assertTrue(obj.toPrint(3).equals("The string value of integer 3 is three "));
+			//assertTrue(obj.toPrint(2).equals("The string value of integer 2 is two"));
+	}
+
+}*/
+
+//package com.niit.training.sunil;
+
+public class MockUtil extends Util {
+	private String expectedResult;
+
+	public String getExpectedResult() {
+		return expectedResult;
+	}
+
+	public void setExpectedResult(String expectedResult) {
+		this.expectedResult = expectedResult;
+	}
+	public String convert(final int n) {
+		return expectedResult;
+	}
+
+}
+
+//
+
+package com.niit.training.sunil;
+
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+
+import com.niit.training.dao.FlightDao;
+import com.niit.training.dao.UserDao;
+import com.niit.training.model.Flight;
+import com.niit.training.model.User;
+import com.niit.training.service.FlightServiceImpl;
+
+public class FlightServiceImplTest {
+    @InjectMocks
+	FlightServiceImpl impl;
+	
+	@Mock
+	FlightDao flightDao;
+	
+	@Before
+	public void initialMethod() {
+		//impl = new LoginServiceImpl();
+		MockitoAnnotations.initMocks(this);
+		Flight flight = new Flight();
+		Mockito.when(flightDao.getFlightByNumber(Mockito.anyString())).thenReturn(flight);
+	}
+	
+	@Test
+	public void validateFlightTest() {
+		impl.addFlight("B352", "indigo", 500 );
+   assertTrue(impl.listAllFlight().size>0);
+}
+}
+
